@@ -1,0 +1,44 @@
+# ==== Secrete / config local ====
+.env
+*.env
+!.env.example
+
+# ==== Python ====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+ENV/
+
+# ==== Vector DB (ChromaDB) - se regenereaza cu populate_database.py ====
+chroma/
+*.sqlite3
+
+# ==== Modele / greutati YOLO (de obicei prea mari pentru git) ====
+*.pt
+*.onnx
+runs/
+Project_YOLOv8*/
+
+# ==== Fisiere audio temporare (TTS/STT) ====
+*.wav
+*.mp3
+
+# ==== PDF-uri mari (manual de asamblare, documentatie) - optional ====
+# Scoate comentariul de mai jos daca nu vrei sa incarci PDF-urile pe GitHub
+# *.pdf
+
+# ==== IDE / OS ====
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ==== Logs ====
+*.log

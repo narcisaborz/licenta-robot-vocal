@@ -1,0 +1,17 @@
+openai
+python-dotenv
+langchain
+langchain-community
+langchain-chroma
+langchain-openai
+langchain-text-splitters
+numpy
+scipy
+sounddevice
+gTTS
+pygame
+opencv-python
+ultralytics
+pyrealsense2
+# xArm SDK (control robot) - instalare separata, vezi documentatia UFACTORY:
+# pip install xarm-python-sdk

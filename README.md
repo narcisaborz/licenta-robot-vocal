@@ -8,6 +8,12 @@ Sistem de asistență vocală pentru asamblare colaborativă om-robot, care comb
 - **Speech-to-Text / Text-to-Speech** pentru interacțiune vocală naturală
 - **Interfață grafică (Tkinter)** cu feed video live și afișarea paginii relevante din manual
 
+## Arhitectura generală
+
+![Arhitectura generală a sistemului](docs/images/arhitectura_generala.png)
+
+Fluxul principal: comanda vocală a operatorului e transcrisă (Whisper), interpretată de agentul conversațional, care fie interoghează baza de cunoștințe (RAG), fie trimite o comandă către robot (MQTT), fie folosește viziunea artificială pentru a identifica piesele din scenă — apoi răspunsul e transmis înapoi vocal (TTS).
+
 ## Structură proiect
 
 | Fișier | Rol |
@@ -56,6 +62,28 @@ pip install -r requirements.txt
    python populate_database.py
    ```
 
+## Module principale
+
+### Agentul conversațional
+Rutează fiecare comandă vocală către una dintre cele trei căi de procesare: comandă robot (confirmată via MQTT), întrebare despre manual (răspuns din RAG) sau conversație liberă (LLM).
+
+![Schema logică a agentului conversațional](docs/images/agent_conversational.png)
+
+### Sistemul RAG
+Manualul PDF e indexat în ChromaDB; la fiecare întrebare, se face o căutare semantică pentru a găsi fragmentele relevante, care sunt folosite pentru a construi promptul trimis către model.
+
+![Arhitectura sistemului RAG](docs/images/arhitectura_rag.png)
+
+### Modulul de viziune artificială
+Camera Intel RealSense D435 furnizează fluxurile RGB și de adâncime, procesate de un model YOLOv8n antrenat pe un set propriu de date pentru detecția pieselor de asamblare.
+
+![Arhitectura modulului de viziune artificială](docs/images/modul_viziune.png)
+
+### Comunicarea cu robotul
+Comenzile către robotul xArm5 și confirmările de execuție circulă printr-un broker MQTT.
+
+![Arhitectura de comunicare MQTT](docs/images/comunicare_mqtt.png)
+
 ## Rulare
 
 ```bash
@@ -70,7 +98,9 @@ python gui_interface_ajustat_final.py
 
 ## Notă
 
-Fișierele `.pt` (greutăți model YOLO), directorul `chroma/` (bază vectorială generată) și fișierele audio temporare nu sunt incluse în acest repository (vezi `.gitignore`) — se regenerează local conform pașilor de mai sus.
+Fișierele `.pt` (greutăți model YOLO), directorul `chroma/` (bază vectorială generată) și fișierele audio temporare nu sunt incluse în acest repository (vezi `.gitignore`) — se regenerează/redescarcă local.
+
+**Model YOLO**: calea din `MODEL_PATH` (`app_config.py`) este relativă la un folder de antrenare aflat în afara acestui repo (rezultat al antrenării YOLOv8, cu `runs/`, `wandb/` etc.). Cine clonează proiectul trebuie să copieze manual fișierul `best.pt` (sau alt checkpoint antrenat) în calea indicată de `MODEL_PATH`, sau să actualizeze acea variabilă către locația locală a modelului.
 
 ## Context academic
 
